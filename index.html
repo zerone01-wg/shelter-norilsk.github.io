@@ -6,6 +6,9 @@
   <meta name="description" content="SHELTER — сывороточный протеин с глубоким шоколадным вкусом. Создан в Норильске, доставка по всей России." />
   <title>SHELTER — сывороточный протеин</title>
 
+  <!-- Иконка вкладки: буква S -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='bold' font-size='22' text-anchor='middle' fill='%231958ff'%3ES%3C/text%3E%3C/svg%3E" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -25,13 +28,14 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
       color: var(--black);
       background: var(--white);
       font-family: "Manrope", Arial, sans-serif;
       overflow-x: hidden;
     }
+    img { max-width: 100%; }
     a { color: inherit; text-decoration: none; }
     button, input, textarea, select { font: inherit; }
     button { cursor: pointer; }
@@ -63,6 +67,7 @@
       background: var(--blue); content: "";
       box-shadow: 0 0 0 0 rgba(25, 88, 255, 0.6);
       animation: ping 2s infinite;
+      flex-shrink: 0;
     }
     @keyframes ping {
       0% { box-shadow: 0 0 0 0 rgba(25, 88, 255, 0.6); }
@@ -73,7 +78,7 @@
     .section-title {
       max-width: 790px;
       font-family: "Unbounded", sans-serif;
-      font-size: clamp(30px, 4.4vw, 64px);
+      font-size: clamp(28px, 4.4vw, 64px);
       font-weight: 700;
       letter-spacing: -0.06em;
       line-height: 1.06;
@@ -93,6 +98,7 @@
       min-height: 56px; padding: 0 26px;
       border: 1px solid transparent; border-radius: 4px;
       font-size: 14px; font-weight: 800;
+      text-align: center;
       transition: transform 0.3s var(--ease), background 0.3s, color 0.3s, box-shadow 0.3s;
     }
     .btn::after {
@@ -116,11 +122,13 @@
     .header.scrolled {
       background: rgba(10, 10, 10, 0.85);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 1px 0 rgba(255,255,255,0.08);
     }
     .header-inner {
       display: flex; align-items: center; justify-content: space-between;
       min-height: 80px;
+      gap: 16px;
     }
     .logo {
       font-family: "Unbounded", sans-serif;
@@ -135,12 +143,31 @@
     }
     .nav a:hover { opacity: 1; }
     .nav a:hover::after { width: 100%; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
     .header-order {
       padding: 10px 16px; border-radius: 4px;
       background: var(--blue); font-size: 13px; font-weight: 800;
-      transition: transform 0.2s, background 0.2s;
+      transition: transform 0.2s, background 0.2s, color 0.2s;
+      white-space: nowrap;
     }
     .header-order:hover { transform: translateY(-2px); background: var(--white); color: var(--black); }
+
+    .menu-toggle {
+      display: none;
+      width: 42px; height: 42px;
+      background: transparent; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px;
+      position: relative;
+    }
+    .menu-toggle span {
+      position: absolute; left: 11px; right: 11px; height: 2px; background: var(--white);
+      transition: transform 0.3s var(--ease), opacity 0.2s;
+    }
+    .menu-toggle span:nth-child(1) { top: 13px; }
+    .menu-toggle span:nth-child(2) { top: 20px; }
+    .menu-toggle span:nth-child(3) { top: 27px; }
+    .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; }
+    .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* ---------- Hero ---------- */
     .hero {
@@ -187,7 +214,7 @@
     .hero h1 {
       max-width: 760px;
       font-family: "Unbounded", sans-serif;
-      font-size: clamp(42px, 6vw, 88px);
+      font-size: clamp(36px, 6vw, 88px);
       font-weight: 700; letter-spacing: -0.08em; line-height: 0.98;
       color: var(--white);
     }
@@ -409,7 +436,20 @@
 
     /* ---------- Samples (пробники) ---------- */
     .samples { padding: 140px 0; background: var(--white); }
-    .samples-head { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end; margin-bottom: 60px; }
+    .samples-head { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end; margin-bottom: 50px; }
+
+    /* Место под фото пробников */
+    .sample-photo {
+      width: 100%; aspect-ratio: 16 / 6;
+      margin-bottom: 50px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--light);
+      border: 2px dashed #b9c8ea; border-radius: 6px;
+      overflow: hidden;
+      color: #8a9bbf; font-size: 14px; font-weight: 700; text-align: center;
+    }
+    .sample-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .samples-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
     .sample-card {
       position: relative; padding: 34px 28px; background: var(--light);
@@ -452,7 +492,7 @@
     .news-soon {
       max-width: 800px;
       font-family: "Unbounded", sans-serif;
-      font-size: clamp(22px, 3vw, 36px);
+      font-size: clamp(20px, 3vw, 36px);
       font-weight: 700;
       letter-spacing: -0.04em;
       line-height: 1.25;
@@ -477,7 +517,7 @@
     .order-text { max-width: 470px; margin-top: 22px; color: #dbe4ff; line-height: 1.7; }
     .order-links { display: flex; flex-direction: column; justify-content: center; gap: 10px; position: relative; z-index: 1; }
     .order-links a {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
       padding: 19px 20px; color: var(--black); background: var(--white);
       font-size: 14px; font-weight: 800;
       transition: transform 0.3s var(--ease), background 0.3s;
@@ -490,7 +530,7 @@
       display: flex; justify-content: space-between; align-items: center;
       flex-wrap: wrap; gap: 20px; color: var(--gray); font-size: 12px;
     }
-    .footer-social { display: flex; gap: 10px; }
+    .footer-social { display: flex; gap: 10px; flex-wrap: wrap; }
     .footer-social a {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px;
@@ -500,22 +540,21 @@
     .footer-social a:hover { color: var(--white); background: var(--blue); border-color: var(--blue); transform: translateY(-2px); }
     .footer-social svg { width: 18px; height: 18px; fill: currentColor; }
 
-    /* ---------- Shell mascot (floating) ---------- */
+    /* ---------- Shell mascot (floating, draggable) ---------- */
     .shell {
-      position: fixed; bottom: 18px; left: 18px; z-index: 40;
-      width: 120px; height: 120px; cursor: pointer;
-      transition: left 1.2s var(--ease);
+      position: fixed; left: 18px; top: 0; z-index: 40;
+      width: 120px; height: 120px;
+      cursor: grab;
+      touch-action: none;
+      user-select: none; -webkit-user-select: none;
+      transition: left 0.9s var(--ease), top 0.9s var(--ease);
     }
-    .shell.right { left: calc(100% - 138px); }
-    .shell.entering { animation: shellEnter 2.2s var(--ease) forwards; }
-    @keyframes shellEnter {
-      0% { left: -140px; }
-      100% { left: 18px; }
-    }
-    .shell-inner { width: 100%; height: 100%; transform-origin: 50% 100%; }
+    .shell.dragging { transition: none; cursor: grabbing; }
+    .shell-inner { width: 100%; height: 100%; transform-origin: 50% 100%; pointer-events: none; }
     .shell-inner img {
       width: 100%; height: 100%; object-fit: contain; display: block;
       filter: drop-shadow(0 10px 12px rgba(0,0,0,0.35));
+      -webkit-user-drag: none;
     }
     .shell.idle .shell-inner { animation: shellIdle 2.6s ease-in-out infinite; }
     .shell.jump .shell-inner { animation: shellJump 0.9s var(--ease); }
@@ -530,7 +569,7 @@
     }
     @keyframes shellRun { 50% { transform: translateY(-8px) rotate(4deg); } }
 
-    /* Облачко: позиция считается в JS над головой Шелла */
+    /* Облачко над головой Шелла (показывается только по клику) */
     .shell-bubble {
       position: fixed; left: 0; top: 0; z-index: 41;
       width: 240px; padding: 14px 16px;
@@ -548,7 +587,7 @@
     .shell-bubble.show { opacity: 1; transform: translateY(0) scale(1); }
     .shell-bubble b { color: var(--blue); font-family: "Unbounded", sans-serif; font-size: 11px; letter-spacing: 0.08em; display: block; margin-bottom: 4px; text-transform: uppercase; }
 
-    /* ---------- Reveal animations (varied) ---------- */
+    /* ---------- Reveal animations ---------- */
     .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s var(--ease); }
     .reveal.from-left { transform: translateX(-60px); }
     .reveal.from-right { transform: translateX(60px); }
@@ -563,34 +602,76 @@
       .shell-column { grid-template-columns: 1fr; padding: 36px; }
       .samples-head { grid-template-columns: 1fr; gap: 20px; }
       .samples-cards, .samples-how { grid-template-columns: 1fr 1fr; }
+      .product-grid { gap: 50px; }
     }
+
     @media (max-width: 850px) {
-      .nav { display: none; }
-      .hero { min-height: auto; padding-top: 135px; padding-bottom: 180px; }
+      .menu-toggle { display: block; }
+      .header-order { display: none; }
+      .nav {
+        position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; gap: 0;
+        background: rgba(10,10,10,0.97);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.4s var(--ease);
+      }
+      .nav.open { max-height: 400px; }
+      .nav a { padding: 18px 24px; font-size: 15px; border-top: 1px solid rgba(255,255,255,0.08); opacity: 1; }
+      .nav a::after { display: none; }
+      .header-inner { min-height: 70px; }
+      .hero { min-height: auto; padding: 120px 0 170px; }
       .hero-grid, .about-grid, .product-grid, .order-box { grid-template-columns: 1fr; }
       .hero-grid { gap: 35px; }
       .pack { justify-self: start; margin: 20px 0 20px 25px; }
       .facts-grid { grid-template-columns: 1fr 1fr; }
       .fact:nth-child(2) { border-right: 0; }
       .fact:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+      .about { padding: 100px 0; }
       .about-grid { gap: 45px; }
-      .order-box { padding: 35px 26px; }
+      .product { padding: 100px 0; }
+      .samples { padding: 100px 0; }
+      .news { padding: 100px 0; }
+      .order { padding: 90px 0; }
+      .order-box { padding: 35px 26px; gap: 30px; }
+      .shell-column { margin-top: 80px; }
       .shell { width: 90px; height: 90px; }
-      .shell.right { left: calc(100% - 108px); }
       .shell-bubble { width: 200px; }
     }
+
     @media (max-width: 540px) {
       .container { width: min(100% - 32px, 1240px); }
-      .hero h1 { font-size: 40px; }
+      .hero h1 { font-size: 36px; }
+      .hero-description { font-size: 16px; margin: 24px 0; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions .btn { width: 100%; }
+      .hero-price strong { font-size: 26px; }
+      .hero::after { width: 320px; height: 320px; left: 50%; transform: translateX(-50%); }
       .facts-grid, .features, .samples-cards, .samples-how { grid-template-columns: 1fr; }
       .fact, .fact:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--line); }
       .fact:last-child { border-bottom: 0; }
-      .pack { width: 240px; height: 350px; }
+      .north-card { min-height: 360px; padding: 26px; }
+      .north-card p { font-size: 15px; }
+      .section-text { font-size: 16px; }
+      .pack { width: 240px; height: 350px; margin-left: 0; }
       .pack-name { font-size: 26px; }
-      .footer-inner { flex-direction: column; }
-      .shell-column { padding: 26px; }
-      .shell-column h3 { font-size: 26px; }
-      .shell-column-art img { width: 200px; height: 200px; }
+      .shell-column { padding: 26px; gap: 30px; }
+      .shell-column::after { font-size: 90px; }
+      .shell-column h3 { font-size: 24px; }
+      .shell-column-art img { width: 180px; height: 180px; }
+      .shell-traits span { font-size: 12px; padding: 7px 12px; }
+      .composition-media { height: 260px; }
+      .composition-body { padding: 0 22px 26px; }
+      .composition-card h3 { font-size: 20px; }
+      .composition-list li { font-size: 13px; }
+      .sample-photo { aspect-ratio: 16 / 10; margin-bottom: 36px; font-size: 13px; }
+      .sample-card { padding: 28px 22px; }
+      .order-links a { padding: 16px 16px; font-size: 13px; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-social { justify-content: center; }
+      .shell { width: 76px; height: 76px; }
+      .shell-bubble { width: 190px; font-size: 12px; padding: 12px 14px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -619,14 +700,19 @@
   <header class="header" id="header">
     <div class="container header-inner">
       <a href="#" class="logo">SHELTER</a>
-      <nav class="nav">
+      <nav class="nav" id="nav">
         <a href="#story">История</a>
         <a href="#shell">Шелл</a>
         <a href="#product">Продукт</a>
         <a href="#samples">Пробники</a>
         <a href="#news">Новости</a>
       </nav>
-      <a href="#order" class="header-order">Заказать</a>
+      <div class="header-right">
+        <a href="#order" class="header-order">Заказать</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -705,7 +791,7 @@
     </section>
 
     <!-- About -->
-    <section class="about" id="story" data-fact="Знаешь ли ты? Регулярность тренировок важнее разовых рекордов. Прогресс складывается из повторений." data-side="left">
+    <section class="about" id="story">
       <div class="container about-grid">
         <div class="north-card reveal from-left">
           <p>
@@ -731,8 +817,8 @@
       </div>
 
       <!-- Shell column -->
-      <div class="container">
-        <div class="shell-column reveal zoom" id="shell-info">
+      <div class="container" id="shell">
+        <div class="shell-column reveal zoom">
           <div class="shell-column-art">
             <img src="images/shell.png" alt="Шелл" />
           </div>
@@ -744,9 +830,9 @@
               спорт и всегда готов поддержать, даже когда за окном минус тридцать.
             </p>
             <p>
-              Шелл будет сопровождать тебя по сайту: подскочит, пробежит по экрану и
-              расскажет пару интересных фактов о спорте. Нажми на него — и узнаешь
-              что-нибудь новое.
+              Шелл будет сопровождать тебя по сайту. Нажми на него — и узнаешь
+              что-нибудь новое. Его можно перетаскивать в любое место экрана, но
+              будь осторожен: иногда он убегает в другой угол!
             </p>
             <div class="shell-traits">
               <span>Весёлый</span>
@@ -760,7 +846,7 @@
     </section>
 
     <!-- Product -->
-    <section class="product" id="product" data-fact="Белок участвует в восстановлении мышц после нагрузки. Он нужен не только для роста, но и для поддержания формы." data-side="right">
+    <section class="product" id="product">
       <div class="container product-grid">
         <div class="reveal from-left">
           <p class="eyebrow">Основа рациона</p>
@@ -828,7 +914,7 @@
     </section>
 
     <!-- Samples -->
-    <section class="samples" id="samples" data-fact="Перед покупкой большой банки полезно попробовать продукт. Так ты поймёшь, подходит ли тебе вкус." data-side="left">
+    <section class="samples" id="samples">
       <div class="container">
         <div class="samples-head">
           <div class="reveal from-left">
@@ -841,6 +927,12 @@
               прежде чем брать большую банку. Одна порция — 30 г, как в обычной упаковке.
             </p>
           </div>
+        </div>
+        <!-- Место для картинки пробников.
+             Чтобы вставить фото, замени содержимое блока на:
+             <img src="images/samples.jpg" alt="Пробники SHELTER" /> -->
+        <div class="sample-photo reveal">
+          <span>Место для фото пробников</span>
         </div>
 
         <div class="samples-cards">
@@ -882,7 +974,7 @@
     </section>
 
     <!-- News -->
-    <section class="news" id="news" data-fact="Мероприятия и встречи с людьми — отличный способ найти мотивацию и новых партнёров по тренировкам." data-side="right">
+    <section class="news" id="news">
       <div class="container">
         <p class="eyebrow reveal from-left">Новости и события</p>
         <p class="news-soon reveal">Скоро тут появится информация о прошедших мероприятиях и участии.</p>
@@ -936,34 +1028,46 @@
   </footer>
 
   <!-- Shell mascot -->
-  <div class="shell entering idle" id="shell" title="Нажми на Шелла">
+  <div class="shell idle" id="shellMascot" title="Нажми на Шелла или перетащи его">
     <div class="shell-inner">
-      <img src="images/shell.png" alt="Шелл" />
+      <img src="images/shell.png" alt="Шелл" draggable="false" />
     </div>
   </div>
 
-  <!-- Облачко с фактами (позиционируется над Шеллом в JS) -->
+  <!-- Облачко с фактами (показывается только по клику) -->
   <div class="shell-bubble" id="bubble"></div>
 
   <script>
-    // Loader
+    // ---------- Loader ----------
     const loader = document.getElementById("loader");
     window.addEventListener("load", () => {
       setTimeout(() => loader.classList.add("hidden"), 1100);
     });
 
-    // Hero words stagger
+    // ---------- Hero words stagger ----------
     document.querySelectorAll(".hero h1 .word").forEach((el, i) => {
       el.style.animationDelay = `${0.3 + i * 0.12}s`;
     });
 
-    // Header on scroll
+    // ---------- Header on scroll ----------
     const header = document.getElementById("header");
     window.addEventListener("scroll", () => {
       header.classList.toggle("scrolled", window.scrollY > 60);
     }, { passive: true });
 
-    // Scroll reveal
+    // ---------- Mobile menu ----------
+    const menuToggle = document.getElementById("menuToggle");
+    const nav = document.getElementById("nav");
+    menuToggle.addEventListener("click", () => {
+      menuToggle.classList.toggle("open");
+      nav.classList.toggle("open");
+    });
+    nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      menuToggle.classList.remove("open");
+      nav.classList.remove("open");
+    }));
+
+    // ---------- Scroll reveal ----------
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -974,17 +1078,24 @@
     }, { threshold: 0.15 });
     document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
-    // Composition card: start animation when visible
+    // Composition card animation start
     const compositionObserver = new IntersectionObserver((entries) => {
       entries.forEach((e) => e.isIntersecting && e.target.classList.add("visible"));
     }, { threshold: 0.2 });
     document.querySelectorAll(".composition-card").forEach((el) => compositionObserver.observe(el));
 
-    // ---------- Shell mascot ----------
-    const shell = document.getElementById("shell");
+    // ==========================================================
+    //  SHELL MASCOT
+    // ==========================================================
+    const FLEE_CHANCE = 0.35;      // шанс убежать, когда пытаются схватить (0..1)
+    const DRAG_FLEE_CHANCE = 0.02; // шанс сбежать во время перетаскивания, на каждое движение
+    const MARGIN = 8;
+
+    const shell = document.getElementById("shellMascot");
     const shellInner = shell.querySelector(".shell-inner");
     const bubble = document.getElementById("bubble");
     let bubbleTimer;
+    let fleeTimer;
 
     const facts = [
       "Белок помогает восстанавливать мышцы после тренировки. Не забывай про него в течение дня!",
@@ -996,8 +1107,45 @@
       "Прогресс в спорте часто заметен через несколько недель. Главное — не бросать на полпути."
     ];
     let factIndex = 0;
+    function nextFact() {
+      const text = facts[factIndex % facts.length];
+      factIndex++;
+      return text;
+    }
 
-    // Облачко всегда над головой Шелла: координаты пересчитываются каждый кадр
+    // Позиция Шелла (левый верхний угол, px)
+    let pos = { x: 18, y: 0 };
+    function setPos(x, y) {
+      pos = { x, y };
+      shell.style.left = x + "px";
+      shell.style.top = y + "px";
+    }
+    function clampPos(x, y) {
+      const s = shell.offsetWidth;
+      return {
+        x: Math.min(Math.max(x, MARGIN), window.innerWidth - s - MARGIN),
+        y: Math.min(Math.max(y, MARGIN), window.innerHeight - s - MARGIN)
+      };
+    }
+
+    // Стартовая позиция: слева внизу, с въездом из-за экрана
+    function initShell() {
+      const s = shell.offsetWidth;
+      const target = { x: 18, y: window.innerHeight - s - 18 };
+      shell.style.transition = "none";
+      setPos(-s - 20, target.y);
+      void shell.offsetWidth;
+      shell.style.transition = "";
+      setTimeout(() => setPos(target.x, target.y), 50);
+    }
+    initShell();
+
+    window.addEventListener("resize", () => {
+      const p = clampPos(pos.x, pos.y);
+      setPos(p.x, p.y);
+    });
+
+    // ---------- Облачко ----------
     function placeBubble() {
       const r = shellInner.getBoundingClientRect();
       const bw = bubble.offsetWidth;
@@ -1012,7 +1160,7 @@
       bubble.style.setProperty("--ax", (cx - left) + "px");
     }
     (function trackBubble() {
-      placeBubble();
+      if (bubble.classList.contains("show")) placeBubble();
       requestAnimationFrame(trackBubble);
     })();
 
@@ -1023,6 +1171,10 @@
       clearTimeout(bubbleTimer);
       bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 6000);
     }
+    function hideBubble() {
+      clearTimeout(bubbleTimer);
+      bubble.classList.remove("show");
+    }
 
     function jump() {
       shell.classList.remove("jump");
@@ -1030,62 +1182,94 @@
       shell.classList.add("jump");
     }
 
-    function nextFact() {
-      const text = facts[factIndex % facts.length];
-      factIndex++;
-      return text;
+    // ---------- Побег в другой угол ----------
+    function fleeToCorner() {
+      const s = shell.offsetWidth;
+      const corners = [
+        { x: MARGIN, y: MARGIN },
+        { x: window.innerWidth - s - MARGIN, y: MARGIN },
+        { x: MARGIN, y: window.innerHeight - s - MARGIN },
+        { x: window.innerWidth - s - MARGIN, y: window.innerHeight - s - MARGIN }
+      ];
+      // Выбираем угол, достаточно далёкий от текущего положения
+      const far = corners.filter(c => Math.abs(c.x - pos.x) > 40 || Math.abs(c.y - pos.y) > 40);
+      const list = far.length ? far : corners;
+      const target = list[Math.floor(Math.random() * list.length)];
+
+      hideBubble();
+      shell.classList.remove("jump");
+      shell.classList.add("run");
+      clearTimeout(fleeTimer);
+      fleeTimer = setTimeout(() => shell.classList.remove("run"), 900);
+      setPos(target.x, target.y);
     }
 
-    // Run-in intro on load
-    setTimeout(() => {
-      shell.classList.remove("entering");
-      showBubble("Привет! Я Шелл, твой весёлый помощник. Листай сайт — я буду рассказывать интересные факты о спорте!");
-      jump();
-    }, 2300);
+    // ---------- Перетаскивание и клик ----------
+    let press = null;
 
-    // Click on Shell
-    shell.addEventListener("click", () => {
-      jump();
-      showBubble(nextFact());
+    shell.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      if (Math.random() < FLEE_CHANCE) {
+        fleeToCorner();
+        press = null;
+        return;
+      }
+      const r = shell.getBoundingClientRect();
+      press = {
+        id: e.pointerId,
+        sx: e.clientX,
+        sy: e.clientY,
+        ox: e.clientX - r.left,
+        oy: e.clientY - r.top,
+        dragging: false
+      };
+      shell.setPointerCapture(e.pointerId);
     });
 
-    // Section-based behavior: jump, switch side, show fact
-    const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const side = el.dataset.side || "left";
-        shell.classList.toggle("right", side === "right");
-        shell.classList.add("run");
-        setTimeout(() => shell.classList.remove("run"), 1200);
-        jump();
-        if (el.dataset.fact) showBubble(el.dataset.fact);
-        sectionObserver.unobserve(el);
-      });
-    }, { threshold: 0.35 });
-    document.querySelectorAll("[data-fact]").forEach((el) => sectionObserver.observe(el));
+    shell.addEventListener("pointermove", (e) => {
+      if (!press || e.pointerId !== press.id) return;
+      const dx = e.clientX - press.sx;
+      const dy = e.clientY - press.sy;
 
-    // Shell-info section: special reaction
-    const shellInfo = document.getElementById("shell-info");
-    const shellInfoObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          jump();
-          showBubble("Это я! Нажми на меня в любой момент, и я расскажу что-нибудь интересное.", "Шелл");
-          shellInfoObserver.disconnect();
+      if (!press.dragging && Math.hypot(dx, dy) > 6) {
+        press.dragging = true;
+        shell.classList.add("dragging");
+        shell.classList.remove("idle");
+        hideBubble();
+      }
+
+      if (press.dragging) {
+        // Иногда Шелл выскальзывает прямо во время перетаскивания
+        if (Math.random() < DRAG_FLEE_CHANCE) {
+          shell.releasePointerCapture(press.id);
+          press = null;
+          shell.classList.remove("dragging");
+          fleeToCorner();
+          return;
         }
-      });
-    }, { threshold: 0.5 });
-    shellInfoObserver.observe(shellInfo);
+        const p = clampPos(e.clientX - press.ox, e.clientY - press.oy);
+        setPos(p.x, p.y);
+      }
+    });
 
-    // Idle: jump and fact periodically
-    setInterval(() => {
-      if (document.hidden) return;
-      jump();
-      showBubble(nextFact());
-    }, 18000);
+    function endPress(e) {
+      if (!press || e.pointerId !== press.id) return;
+      const wasDragging = press.dragging;
+      press = null;
+      shell.classList.remove("dragging");
+      if (!wasDragging) {
+        // Простой клик — факт
+        jump();
+        showBubble(nextFact());
+      }
+    }
+    shell.addEventListener("pointerup", endPress);
+    shell.addEventListener("pointercancel", () => {
+      press = null;
+      shell.classList.remove("dragging");
+    });
 
-    // Run animation when user scrolls fast
+    // ---------- Реакция на быстрый скролл (без текста) ----------
     let lastY = window.scrollY;
     let scrollTimer;
     window.addEventListener("scroll", () => {
@@ -1100,4 +1284,5 @@
   </script>
 </body>
 </html>
+
 
