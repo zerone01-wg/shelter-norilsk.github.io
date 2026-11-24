@@ -14,6 +14,7 @@
     :root {
       --blue: #1958ff;
       --blue-soft: #86a8ff;
+      --blue-light: #9db9ff;
       --dark-blue: #0c235f;
       --black: #0a0a0a;
       --gray: #707070;
@@ -144,26 +145,33 @@
     /* ---------- Hero ---------- */
     .hero {
       position: relative; min-height: 100vh;
-      padding: 150px 0 80px;
+      padding: 150px 0 200px;
       color: var(--white); background: var(--black);
       overflow: hidden;
       display: flex; align-items: center;
     }
-    .hero::before {
-      position: absolute; top: -280px; right: -140px;
-      width: 800px; height: 800px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #4d7dff, var(--blue) 60%, #0c3ac0);
-      content: ""; filter: blur(4px);
-      animation: pulse 8s ease-in-out infinite;
-    }
     .hero::after {
-      position: absolute; bottom: -200px; left: 34%;
+      position: absolute; bottom: 60px; left: 34%;
       width: 500px; height: 500px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.18); content: "";
+      border: 1px solid rgba(157, 185, 255, 0.25); content: "";
       animation: rotateRing 30s linear infinite;
+      z-index: 0;
     }
-    @keyframes pulse { 50% { transform: scale(1.12) translate(-30px, 20px); } }
     @keyframes rotateRing { to { transform: rotate(360deg); } }
+
+    /* Шоколадная река */
+    .choco-river {
+      position: absolute; left: 0; bottom: 0; z-index: 0;
+      width: 100%; height: 150px;
+      pointer-events: none; overflow: hidden;
+    }
+    .choco-river svg { width: 200%; height: 100%; display: block; }
+    .choco-river .flow-back { animation: flowRiver 9s linear infinite; }
+    .choco-river .flow-front { animation: flowRiver 6s linear infinite; }
+    @keyframes flowRiver {
+      from { transform: translateX(0); }
+      to { transform: translateX(-600px); }
+    }
 
     .hero-grid {
       position: relative; z-index: 1;
@@ -172,8 +180,8 @@
     }
     .hero-label {
       display: inline-block; margin-bottom: 22px; padding: 8px 14px;
-      border: 1px solid rgba(168, 192, 255, 0.4); border-radius: 999px;
-      color: #a8c0ff; font-size: 12px; font-weight: 800;
+      border: 1px solid rgba(157, 185, 255, 0.6); border-radius: 999px;
+      color: var(--white); font-size: 12px; font-weight: 800;
       letter-spacing: 0.12em; text-transform: uppercase;
     }
     .hero h1 {
@@ -181,24 +189,29 @@
       font-family: "Unbounded", sans-serif;
       font-size: clamp(42px, 6vw, 88px);
       font-weight: 700; letter-spacing: -0.08em; line-height: 0.98;
+      color: var(--white);
     }
     .hero h1 .word {
       display: inline-block; opacity: 0; transform: translateY(40px);
       animation: wordIn 0.8s var(--ease) forwards;
     }
-    .hero h1 span { color: var(--blue-soft); }
+    .hero h1 span { color: var(--blue-light); }
     @keyframes wordIn { to { opacity: 1; transform: translateY(0); } }
 
     .hero-description {
       max-width: 500px; margin: 32px 0;
-      color: #d3d3d3; font-size: 17px; line-height: 1.7;
+      color: var(--white); font-size: 17px; line-height: 1.7;
     }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-actions .btn-blue { background: var(--blue); color: var(--white); }
+    .hero-actions .btn-light { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.6); }
+    .hero-actions .btn-light:hover { background: var(--white); color: var(--black); }
     .hero-price { display: flex; align-items: baseline; gap: 10px; margin-top: 38px; }
     .hero-price strong {
       font-family: "Unbounded", sans-serif; font-size: 31px; letter-spacing: -0.06em;
+      color: var(--white);
     }
-    .hero-price span { color: #b4b4b4; font-size: 13px; }
+    .hero-price span { color: var(--blue-light); font-size: 13px; font-weight: 700; }
 
     .pack {
       position: relative; justify-self: center;
@@ -236,20 +249,6 @@
     }
     .pack-bottom { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; }
     @keyframes float { 50% { transform: rotate(4deg) translateY(-15px); } }
-
-    /* ---------- Ticker ---------- */
-    .ticker {
-      overflow: hidden; background: var(--blue); color: var(--white);
-      padding: 18px 0; white-space: nowrap;
-    }
-    .ticker-track {
-      display: inline-flex; gap: 40px;
-      font-family: "Unbounded", sans-serif; font-size: 18px; font-weight: 700;
-      letter-spacing: -0.03em;
-      animation: ticker 25s linear infinite;
-    }
-    .ticker-track span::after { content: "✦"; margin-left: 40px; opacity: 0.6; }
-    @keyframes ticker { to { transform: translateX(-50%); } }
 
     /* ---------- Facts ---------- */
     .facts { border-bottom: 1px solid var(--line); }
@@ -304,6 +303,7 @@
       transition: transform 0.5s var(--ease);
     }
     .about-photo img:hover { transform: scale(1.03) rotate(-1deg); }
+    @keyframes pulse { 50% { transform: scale(1.12) translate(-30px, 20px); } }
 
     /* ---------- Shell (mascot) column ---------- */
     .shell-column {
@@ -317,7 +317,10 @@
       color: rgba(25, 88, 255, 0.06); letter-spacing: -0.06em; pointer-events: none;
     }
     .shell-column-art { display: flex; justify-content: center; }
-    .shell-column-art svg { width: 260px; height: 260px; animation: bob 3s ease-in-out infinite; }
+    .shell-column-art img {
+      width: 260px; height: 260px; object-fit: contain;
+      animation: bob 3s ease-in-out infinite;
+    }
     .shell-column h3 {
       font-family: "Unbounded", sans-serif; font-size: 34px; letter-spacing: -0.06em; line-height: 1.05;
       margin-bottom: 18px;
@@ -427,9 +430,9 @@
     .sample-card h3 { margin: 14px 0 10px; font-size: 18px; }
     .sample-card p { color: var(--gray); font-size: 14px; line-height: 1.6; }
     .sample-card .sample-tag {
-      display: inline-block; margin-top: 20px; padding: 6px 10px;
-      background: var(--black); color: var(--white); font-size: 11px; font-weight: 800;
-      letter-spacing: 0.08em; text-transform: uppercase;
+      display: inline-block; margin-top: 20px; padding: 8px 12px;
+      background: var(--black); color: var(--white); font-size: 14px; font-weight: 800;
+      letter-spacing: 0.02em;
     }
     .samples-how {
       margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
@@ -446,32 +449,15 @@
 
     /* ---------- News ---------- */
     .news { padding: 140px 0; background: var(--light); }
-    .news-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 50px; }
-    .news-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .news-card {
-      display: flex; flex-direction: column; background: var(--white);
-      overflow: hidden; transition: transform 0.4s var(--ease), box-shadow 0.4s;
+    .news-soon {
+      max-width: 800px;
+      font-family: "Unbounded", sans-serif;
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.25;
+      color: var(--black);
     }
-    .news-card:hover { transform: translateY(-6px); box-shadow: 0 25px 40px -25px rgba(0,0,0,0.25); }
-    .news-cover {
-      height: 170px; position: relative; overflow: hidden;
-      display: grid; place-items: center; color: var(--white);
-      font-family: "Unbounded", sans-serif; font-size: 40px; font-weight: 800;
-      letter-spacing: -0.06em;
-    }
-    .news-cover.c1 { background: linear-gradient(135deg, var(--blue), #0c3ac0); }
-    .news-cover.c2 { background: linear-gradient(135deg, #1b1b1b, #3a3a3a); }
-    .news-cover.c3 { background: linear-gradient(135deg, var(--dark-blue), var(--blue)); }
-    .news-cover::after {
-      content: ""; position: absolute; width: 140px; height: 140px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.25); right: -40px; top: -40px;
-      transition: transform 0.6s var(--ease);
-    }
-    .news-card:hover .news-cover::after { transform: scale(1.5); }
-    .news-body { padding: 26px; display: flex; flex-direction: column; flex: 1; }
-    .news-date { color: var(--blue); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-    .news-body h3 { margin: 10px 0 10px; font-size: 19px; letter-spacing: -0.02em; }
-    .news-body p { color: var(--gray); font-size: 14px; line-height: 1.6; }
 
     /* ---------- Order ---------- */
     .order { padding: 130px 0; }
@@ -519,15 +505,21 @@
       position: fixed; bottom: 18px; left: 18px; z-index: 40;
       width: 120px; height: 120px; cursor: pointer;
       transition: left 1.2s var(--ease);
-      pointer-events: auto;
     }
-    .shell.right { left: auto; right: 18px; }
+    .shell.right { left: calc(100% - 138px); }
+    .shell.entering { animation: shellEnter 2.2s var(--ease) forwards; }
+    @keyframes shellEnter {
+      0% { left: -140px; }
+      100% { left: 18px; }
+    }
     .shell-inner { width: 100%; height: 100%; transform-origin: 50% 100%; }
-    .shell-inner svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 10px 12px rgba(0,0,0,0.35)); }
+    .shell-inner img {
+      width: 100%; height: 100%; object-fit: contain; display: block;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,0.35));
+    }
     .shell.idle .shell-inner { animation: shellIdle 2.6s ease-in-out infinite; }
     .shell.jump .shell-inner { animation: shellJump 0.9s var(--ease); }
     .shell.run .shell-inner { animation: shellRun 0.5s ease-in-out infinite; }
-    .shell.entering { animation: shellEnter 2.2s var(--ease) forwards; }
     @keyframes shellIdle { 50% { transform: translateY(-6px) rotate(-3deg); } }
     @keyframes shellJump {
       0% { transform: translateY(0) scale(1, 1); }
@@ -537,25 +529,22 @@
       100% { transform: translateY(0) scale(1, 1); }
     }
     @keyframes shellRun { 50% { transform: translateY(-8px) rotate(4deg); } }
-    @keyframes shellEnter {
-      0% { left: -140px; }
-      100% { left: 18px; }
-    }
 
+    /* Облачко: позиция считается в JS над головой Шелла */
     .shell-bubble {
-      position: absolute; bottom: 135px; left: 60px; width: 240px; padding: 14px 16px;
+      position: fixed; left: 0; top: 0; z-index: 41;
+      width: 240px; padding: 14px 16px;
       background: var(--white); color: var(--black); font-size: 13px; line-height: 1.5; font-weight: 600;
       border-radius: 14px; box-shadow: 0 16px 30px -12px rgba(0,0,0,0.4);
-      opacity: 0; transform: translateY(10px) scale(0.95); transform-origin: bottom left;
+      opacity: 0; transform: translateY(8px) scale(0.95); transform-origin: bottom center;
       transition: opacity 0.35s, transform 0.35s var(--ease);
       pointer-events: none;
+      --ax: 120px;
     }
     .shell-bubble::after {
-      content: ""; position: absolute; bottom: -8px; left: 22px;
+      content: ""; position: absolute; bottom: -8px; left: calc(var(--ax) - 8px);
       width: 16px; height: 16px; background: var(--white); transform: rotate(45deg);
     }
-    .shell.right + .shell-bubble,
-    .shell-wrap.right .shell-bubble { left: auto; right: 60px; transform-origin: bottom right; }
     .shell-bubble.show { opacity: 1; transform: translateY(0) scale(1); }
     .shell-bubble b { color: var(--blue); font-family: "Unbounded", sans-serif; font-size: 11px; letter-spacing: 0.08em; display: block; margin-bottom: 4px; text-transform: uppercase; }
 
@@ -573,11 +562,11 @@
     @media (max-width: 1000px) {
       .shell-column { grid-template-columns: 1fr; padding: 36px; }
       .samples-head { grid-template-columns: 1fr; gap: 20px; }
-      .samples-cards, .news-list, .samples-how { grid-template-columns: 1fr 1fr; }
+      .samples-cards, .samples-how { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 850px) {
       .nav { display: none; }
-      .hero { min-height: auto; padding-top: 135px; }
+      .hero { min-height: auto; padding-top: 135px; padding-bottom: 180px; }
       .hero-grid, .about-grid, .product-grid, .order-box { grid-template-columns: 1fr; }
       .hero-grid { gap: 35px; }
       .pack { justify-self: start; margin: 20px 0 20px 25px; }
@@ -585,16 +574,15 @@
       .fact:nth-child(2) { border-right: 0; }
       .fact:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
       .about-grid { gap: 45px; }
-      .news-head { flex-direction: column; align-items: start; }
       .order-box { padding: 35px 26px; }
       .shell { width: 90px; height: 90px; }
-      .shell-bubble { width: 200px; bottom: 105px; left: 40px; }
-      .shell.right + .shell-bubble, .shell-wrap.right .shell-bubble { right: 40px; }
+      .shell.right { left: calc(100% - 108px); }
+      .shell-bubble { width: 200px; }
     }
     @media (max-width: 540px) {
       .container { width: min(100% - 32px, 1240px); }
       .hero h1 { font-size: 40px; }
-      .facts-grid, .features, .samples-cards, .news-list, .samples-how { grid-template-columns: 1fr; }
+      .facts-grid, .features, .samples-cards, .samples-how { grid-template-columns: 1fr; }
       .fact, .fact:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--line); }
       .fact:last-child { border-bottom: 0; }
       .pack { width: 240px; height: 350px; }
@@ -602,6 +590,7 @@
       .footer-inner { flex-direction: column; }
       .shell-column { padding: 26px; }
       .shell-column h3 { font-size: 26px; }
+      .shell-column-art img { width: 200px; height: 200px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -644,6 +633,18 @@
   <main>
     <!-- Hero -->
     <section class="hero">
+      <div class="choco-river" aria-hidden="true">
+        <svg viewBox="0 0 2400 150" preserveAspectRatio="none">
+          <g class="flow-back">
+            <path fill="#3a1c0c" d="M0 40 Q75 5 150 40 T300 40 T450 40 T600 40 T750 40 T900 40 T1050 40 T1200 40 T1350 40 T1500 40 T1650 40 T1800 40 T1950 40 T2100 40 T2250 40 T2400 40 V150 H0 Z"/>
+          </g>
+          <g class="flow-front">
+            <path fill="#6b3a1c" d="M0 75 Q75 40 150 75 T300 75 T450 75 T600 75 T750 75 T900 75 T1050 75 T1200 75 T1350 75 T1500 75 T1650 75 T1800 75 T1950 75 T2100 75 T2250 75 T2400 75 V150 H0 Z"/>
+            <path fill="none" stroke="#b87a3c" stroke-width="3" stroke-linecap="round" opacity="0.6" d="M0 75 Q75 40 150 75 T300 75 T450 75 T600 75 T750 75 T900 75 T1050 75 T1200 75 T1350 75 T1500 75 T1650 75 T1800 75 T1950 75 T2100 75 T2250 75 T2400 75"/>
+          </g>
+        </svg>
+      </div>
+
       <div class="container hero-grid">
         <div>
           <p class="hero-label">Бренд, созданный в Норильске</p>
@@ -680,14 +681,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Ticker -->
-    <div class="ticker" aria-hidden="true">
-      <div class="ticker-track">
-        <span>Deep Chocolate</span><span>Сывороточный белок</span><span>Создано в Норильске</span><span>Доставка по России</span>
-        <span>Deep Chocolate</span><span>Сывороточный белок</span><span>Создано в Норильске</span><span>Доставка по России</span>
-      </div>
-    </div>
 
     <!-- Facts -->
     <section class="facts">
@@ -741,21 +734,7 @@
       <div class="container">
         <div class="shell-column reveal zoom" id="shell-info">
           <div class="shell-column-art">
-            <svg viewBox="0 0 200 200" aria-label="Шелл — белый змей-качок" role="img">
-              <path d="M100 172 C40 150 42 118 100 110 S160 78 100 62" fill="none" stroke="#ffffff" stroke-width="26" stroke-linecap="round"/>
-              <path d="M100 172 C40 150 42 118 100 110 S160 78 100 62" fill="none" stroke="#1958ff" stroke-width="3" stroke-dasharray="6 10" stroke-linecap="round" opacity="0.5"/>
-              <path d="M70 122 Q44 112 40 86" fill="none" stroke="#ffffff" stroke-width="15" stroke-linecap="round"/>
-              <circle cx="36" cy="82" r="13" fill="#ffffff"/>
-              <path d="M130 122 Q156 112 160 86" fill="none" stroke="#ffffff" stroke-width="15" stroke-linecap="round"/>
-              <circle cx="164" cy="82" r="13" fill="#ffffff"/>
-              <ellipse cx="100" cy="46" rx="28" ry="23" fill="#ffffff"/>
-              <path d="M74 36 Q100 24 126 36" fill="none" stroke="#1958ff" stroke-width="6" stroke-linecap="round"/>
-              <circle cx="89" cy="46" r="4.5" fill="#0a0a0a"/>
-              <circle cx="111" cy="46" r="4.5" fill="#0a0a0a"/>
-              <circle cx="90.5" cy="44.5" r="1.4" fill="#ffffff"/>
-              <circle cx="112.5" cy="44.5" r="1.4" fill="#ffffff"/>
-              <path d="M90 56 Q100 64 110 56" fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
-            </svg>
+            <img src="images/shell.png" alt="Шелл" />
           </div>
           <div>
             <p class="eyebrow">Знакомьтесь</p>
@@ -869,19 +848,19 @@
             <div class="sample-size">1</div>
             <h3>Одна порция</h3>
             <p>Попробовать вкус Deep Chocolate в удобной порции 30 г.</p>
-            <span class="sample-tag">Цена уточняется</span>
+            <span class="sample-tag">100 ₽</span>
           </article>
           <article class="sample-card reveal delay-2">
             <div class="sample-size">5</div>
             <h3>Набор из 5 порций</h3>
             <p>Пять порций на несколько дней тренировок — чтобы привыкнуть к вкусу.</p>
-            <span class="sample-tag">Цена уточняется</span>
+            <span class="sample-tag">450 ₽</span>
           </article>
           <article class="sample-card reveal delay-3">
             <div class="sample-size">10</div>
             <h3>Набор из 10 порций</h3>
             <p>Полторы недели регулярного приёма. Самый выгодный способ проверить протеин.</p>
-            <span class="sample-tag">Цена уточняется</span>
+            <span class="sample-tag">900 ₽</span>
           </article>
         </div>
 
@@ -892,7 +871,7 @@
           </div>
           <div class="step reveal delay-1">
             <div class="step-num">2</div>
-            <p>Уточним стоимость, способ оплаты и удобный вариант доставки по России.</p>
+            <p>Уточним способ оплаты и удобный вариант доставки по России.</p>
           </div>
           <div class="step reveal delay-2">
             <div class="step-num">3</div>
@@ -905,42 +884,8 @@
     <!-- News -->
     <section class="news" id="news" data-fact="Мероприятия и встречи с людьми — отличный способ найти мотивацию и новых партнёров по тренировкам." data-side="right">
       <div class="container">
-        <div class="news-head">
-          <div class="reveal from-left">
-            <p class="eyebrow">Новости и события</p>
-            <h2 class="section-title">Что <mark>мы</mark> уже провели.</h2>
-          </div>
-          <p class="section-text reveal from-right" style="margin-top:0">
-            Тренировки, дегустации и встречи с людьми, которые живут спортом.
-          </p>
-        </div>
-
-        <div class="news-list">
-          <article class="news-card reveal delay-1">
-            <div class="news-cover c1">01</div>
-            <div class="news-body">
-              <span class="news-date">Ноябрь 2026</span>
-              <h3>Открытая тренировка в Норильске</h3>
-              <p>Совместная тренировка для всех, кто хочет начать заниматься или просто почувствовать поддержку коллектива.</p>
-            </div>
-          </article>
-          <article class="news-card reveal delay-2">
-            <div class="news-cover c2">02</div>
-            <div class="news-body">
-              <span class="news-date">Октябрь 2026</span>
-              <h3>Дегустация Deep Chocolate</h3>
-              <p>Гости попробовали протеин, задали вопросы о составе и поделились впечатлениями о вкусе.</p>
-            </div>
-          </article>
-          <article class="news-card reveal delay-3">
-            <div class="news-cover c3">03</div>
-            <div class="news-body">
-              <span class="news-date">Сентябрь 2026</span>
-              <h3>Запуск SHELTER</h3>
-              <p>Первая партия банок отправлена покупателям по всей России. Спасибо всем, кто поверил в проект.</p>
-            </div>
-          </article>
-        </div>
+        <p class="eyebrow reveal from-left">Новости и события</p>
+        <p class="news-soon reveal">Скоро тут появится информация о прошедших мероприятиях и участии.</p>
       </div>
     </section>
 
@@ -991,27 +936,14 @@
   </footer>
 
   <!-- Shell mascot -->
-  <div class="shell-wrap" id="shellWrap">
-    <div class="shell entering idle" id="shell" title="Нажми на Шелла">
-      <div class="shell-inner">
-        <svg viewBox="0 0 200 200" aria-hidden="true">
-          <path d="M100 172 C40 150 42 118 100 110 S160 78 100 62" fill="none" stroke="#ffffff" stroke-width="26" stroke-linecap="round"/>
-          <path d="M70 122 Q44 112 40 86" fill="none" stroke="#ffffff" stroke-width="15" stroke-linecap="round"/>
-          <circle cx="36" cy="82" r="13" fill="#ffffff"/>
-          <path d="M130 122 Q156 112 160 86" fill="none" stroke="#ffffff" stroke-width="15" stroke-linecap="round"/>
-          <circle cx="164" cy="82" r="13" fill="#ffffff"/>
-          <ellipse cx="100" cy="46" rx="28" ry="23" fill="#ffffff"/>
-          <path d="M74 36 Q100 24 126 36" fill="none" stroke="#1958ff" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="89" cy="46" r="4.5" fill="#0a0a0a"/>
-          <circle cx="111" cy="46" r="4.5" fill="#0a0a0a"/>
-          <circle cx="90.5" cy="44.5" r="1.4" fill="#ffffff"/>
-          <circle cx="112.5" cy="44.5" r="1.4" fill="#ffffff"/>
-          <path d="M90 56 Q100 64 110 56" fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
-        </svg>
-      </div>
+  <div class="shell entering idle" id="shell" title="Нажми на Шелла">
+    <div class="shell-inner">
+      <img src="images/shell.png" alt="Шелл" />
     </div>
-    <div class="shell-bubble" id="bubble"></div>
   </div>
+
+  <!-- Облачко с фактами (позиционируется над Шеллом в JS) -->
+  <div class="shell-bubble" id="bubble"></div>
 
   <script>
     // Loader
@@ -1020,7 +952,7 @@
       setTimeout(() => loader.classList.add("hidden"), 1100);
     });
 
-    // Hero words: stagger already handled by CSS delay via inline style
+    // Hero words stagger
     document.querySelectorAll(".hero h1 .word").forEach((el, i) => {
       el.style.animationDelay = `${0.3 + i * 0.12}s`;
     });
@@ -1046,10 +978,11 @@
     const compositionObserver = new IntersectionObserver((entries) => {
       entries.forEach((e) => e.isIntersecting && e.target.classList.add("visible"));
     }, { threshold: 0.2 });
+    document.querySelectorAll(".composition-card").forEach((el) => compositionObserver.observe(el));
 
-    // Shell mascot
+    // ---------- Shell mascot ----------
     const shell = document.getElementById("shell");
-    const shellWrap = document.getElementById("shellWrap");
+    const shellInner = shell.querySelector(".shell-inner");
     const bubble = document.getElementById("bubble");
     let bubbleTimer;
 
@@ -1057,15 +990,35 @@
       "Белок помогает восстанавливать мышцы после тренировки. Не забывай про него в течение дня!",
       "Сон — это тоже тренировка. Во время сна организм восстанавливается и растёт сильнее.",
       "Разминка перед занятием снижает риск травм. Пять минут движения уже делают разницу.",
-      "Вода участвует почти во всех процессах организма. Во время тренировок пей regularly.",
-      "Регулярность важнее интенсивности. Лучше заниматься три раза в неделю, чем раз в месяц до упаdrа.",
+      "Вода участвует почти во всех процессах организма. Во время тренировок пей регулярно.",
+      "Регулярность важнее интенсивности. Лучше заниматься три раза в неделю, чем раз в месяц до упадка.",
       "Растяжка после тренировки помогает мышцам быстрее расслабиться и сохраняет подвижность суставов.",
       "Прогресс в спорте часто заметен через несколько недель. Главное — не бросать на полпути."
     ];
     let factIndex = 0;
 
+    // Облачко всегда над головой Шелла: координаты пересчитываются каждый кадр
+    function placeBubble() {
+      const r = shellInner.getBoundingClientRect();
+      const bw = bubble.offsetWidth;
+      const bh = bubble.offsetHeight;
+      const cx = r.left + r.width / 2;
+      let left = cx - bw / 2;
+      left = Math.max(8, Math.min(left, window.innerWidth - bw - 8));
+      let top = r.top - bh - 14;
+      if (top < 8) top = 8;
+      bubble.style.left = left + "px";
+      bubble.style.top = top + "px";
+      bubble.style.setProperty("--ax", (cx - left) + "px");
+    }
+    (function trackBubble() {
+      placeBubble();
+      requestAnimationFrame(trackBubble);
+    })();
+
     function showBubble(text, title = "Факт от Шелла") {
       bubble.innerHTML = `<b>${title}</b>${text}`;
+      placeBubble();
       bubble.classList.add("show");
       clearTimeout(bubbleTimer);
       bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 6000);
@@ -1086,7 +1039,6 @@
     // Run-in intro on load
     setTimeout(() => {
       shell.classList.remove("entering");
-      shell.style.left = "18px";
       showBubble("Привет! Я Шелл, твой весёлый помощник. Листай сайт — я буду рассказывать интересные факты о спорте!");
       jump();
     }, 2300);
@@ -1111,7 +1063,6 @@
         sectionObserver.unobserve(el);
       });
     }, { threshold: 0.35 });
-
     document.querySelectorAll("[data-fact]").forEach((el) => sectionObserver.observe(el));
 
     // Shell-info section: special reaction
@@ -1134,7 +1085,7 @@
       showBubble(nextFact());
     }, 18000);
 
-    // Mascot blinks/moves along scroll direction: small run when user scrolls fast
+    // Run animation when user scrolls fast
     let lastY = window.scrollY;
     let scrollTimer;
     window.addEventListener("scroll", () => {
@@ -1146,9 +1097,7 @@
         scrollTimer = setTimeout(() => shell.classList.remove("run"), 500);
       }
     }, { passive: true });
-
-    // Composition observer
-    document.querySelectorAll(".composition-card").forEach((el) => compositionObserver.observe(el));
   </script>
 </body>
 </html>
+
