@@ -856,7 +856,7 @@
       <div class="container" id="shell">
         <div class="shell-column reveal zoom">
           <div class="shell-column-art">
-            <img src="images/shell.png" alt="Шелл" />
+            <img src="images/shellchill.png" alt="Шелл" />
           </div>
           <div>
             <p class="eyebrow">Знакомьтесь</p>
@@ -1064,7 +1064,7 @@
   <!-- Shell mascot -->
   <div class="shell idle" id="shellMascot" title="Нажми на Шелла">
     <div class="shell-inner">
-      <img src="images/shell.png" alt="Шелл" draggable="false" />
+      <img src="images/shellstop.png" alt="Шелл" draggable="false" />
     </div>
   </div>
 
@@ -1136,6 +1136,23 @@
     const shell = document.getElementById("shellMascot");
     const shellInner = shell.querySelector(".shell-inner");
     const bubble = document.getElementById("bubble");
+const shellImg = document.getElementById("shellImg");
+const SHELL_SPRITES = {
+  stop: "images/shellstop.png",
+  voice: "images/shellvoice.png",
+  angry: "images/shellangry.png",
+  sad: "images/shellsad.png"
+};
+let spriteTimer;
+function setSprite(key, duration) {
+  clearTimeout(spriteTimer);
+  shellImg.src = SHELL_SPRITES[key];
+  if (duration) {
+    spriteTimer = setTimeout(() => {
+      shellImg.src = SHELL_SPRITES.stop;
+    }, duration);
+  }
+}
 
     const facts = [
       "Белок помогает восстанавливать мышцы после тренировки. Не забывай про него в течение дня!",
@@ -1266,6 +1283,7 @@
     function calm() {
       streak = 0;
       setMood(null);
+      setSprite("stop");
     }
 
     // ---------- Клик по Шеллу ----------
@@ -1277,24 +1295,28 @@
       clearTimeout(calmTimer);
       calmTimer = setTimeout(calm, CALM_DELAY);
 
-      if (streak >= TIRED_FROM) {
+            if (streak >= TIRED_FROM) {
         setMood("tired");
+        setSprite("sad");
         const text = tiredPhrases[tiredIdx % tiredPhrases.length];
         tiredIdx++;
         say(text, "Шелл устал", "tired", 6500);
       } else if (streak >= ANGRY_FROM) {
         setMood("angry");
+        setSprite("angry");
         jump();
         const text = angryPhrases[angryIdx % angryPhrases.length];
         angryIdx++;
         say(text, "Шелл злится", "angry", 4000);
       } else {
         setMood(null);
+        setSprite("voice", 6000);
         jump();
         const text = facts[factIdx % facts.length];
         factIdx++;
         say(text, "Факт от Шелла", null, 6000);
       }
+
     }
 
     // ---------- Автономная беготня по горизонтали (только когда не трогают) ----------
