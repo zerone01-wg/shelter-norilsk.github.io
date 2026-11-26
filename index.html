@@ -1188,40 +1188,38 @@ function setSprite(key, duration) {
     let lastClickAt = 0;
     let calmTimer, bubbleTimer, runTimer, patrolTimer;
 
-    // ---------- Позиция (только по X, Y фиксирован у низа экрана) ----------
-    let posX = 18;
+    // ---------- Позиция (X и Y) ----------
+let pos = { x: 18, y: 0 };
 
-    function groundY() {
-      return window.innerHeight - shell.offsetWidth - BOTTOM_OFFSET;
-    }
-    function clampX(x) {
-      const s = shell.offsetWidth;
-      return Math.min(Math.max(x, MARGIN), window.innerWidth - s - MARGIN);
-    }
-    function setX(x) {
-      posX = clampX(x);
-      shell.style.left = posX + "px";
-    }
-    function placeOnGround() {
-      shell.style.top = groundY() + "px";
-    }
+function clampPos(x, y) {
+  const s = shell.offsetWidth;
+  return {
+    x: Math.min(Math.max(x, MARGIN), window.innerWidth - s - MARGIN),
+    y: Math.min(Math.max(y, MARGIN), window.innerHeight - s - MARGIN)
+  };
+}
 
-    // Въезд слева
-    function initShell() {
-      placeOnGround();
-      const s = shell.offsetWidth;
-      shell.style.transition = "none";
-      shell.style.left = (-s - 20) + "px";
-      void shell.offsetWidth;
-      shell.style.transition = "";
-      setTimeout(() => setX(18), 60);
-    }
-    initShell();
+function setPos(x, y) {
+  pos = clampPos(x, y);
+  shell.style.left = pos.x + "px";
+  shell.style.top = pos.y + "px";
+}
 
-    window.addEventListener("resize", () => {
-      placeOnGround();
-      setX(posX);
-    });
+// Стартовая позиция: слева внизу, с въездом из-за экрана
+function initShell() {
+  const s = shell.offsetWidth;
+  const target = { x: 18, y: window.innerHeight - s - BOTTOM_OFFSET };
+  shell.style.transition = "none";
+  setPos(-s - 20, target.y);
+  void shell.offsetWidth;
+  shell.style.transition = "";
+  setTimeout(() => setPos(target.x, target.y), 60);
+}
+initShell();
+
+window.addEventListener("resize", () => {
+  setPos(pos.x, pos.y);
+});
 
     // ---------- Облачко ----------
     function placeBubble() {
@@ -1275,11 +1273,11 @@ function setSprite(key, duration) {
       if (mood) shell.classList.add(mood);
     }
 
-    function runTo(x) {
+    function runTo(x,y) {
       shell.classList.add("run");
       clearTimeout(runTimer);
       runTimer = setTimeout(() => shell.classList.remove("run"), 900);
-      setX(x);
+      setPos(x,y);
     }
 
     // ---------- Сброс в спокойное состояние ----------
@@ -1327,18 +1325,20 @@ function setSprite(key, duration) {
       return press !== null || streak > 0;
     }
     function patrol() {
-      if (!isBusy()) {
-        const s = shell.offsetWidth;
-        const minX = MARGIN;
-        const maxX = window.innerWidth - s - MARGIN;
-        if (maxX > minX) {
-          const target = minX + Math.random() * (maxX - minX);
-          runTo(target);
-        }
-      }
-      patrolTimer = setTimeout(patrol, 6000 + Math.random() * 5000);
+  if (!isBusy()) {
+    const s = shell.offsetWidth;
+    const minX = MARGIN;
+    const maxX = window.innerWidth - s - MARGIN;
+    const minY = MARGIN;
+    const maxY = window.innerHeight - s - MARGIN;
+    if (maxX > minX && maxY > minY) {
+      const targetX = minX + Math.random() * (maxX - minX);
+      const targetY = minY + Math.random() * (maxY - minY);
+      runTo(targetX, targetY);
     }
-    setTimeout(patrol, 4000);
+  }
+  patrolTimer = setTimeout(patrol, 6000 + Math.random() * 5000);
+}
 
     // ---------- Указатель: клик и перетаскивание только по горизонтали ----------
     let press = null;
@@ -1349,25 +1349,30 @@ function setSprite(key, duration) {
       press = {
         id: e.pointerId,
         sx: e.clientX,
+        sy: e.clientY,
         ox: e.clientX - r.left,
+        oy: e.clientY - r.top,
         moved: false
       };
       shell.setPointerCapture(e.pointerId);
     });
 
     shell.addEventListener("pointermove", (e) => {
-      if (!press || e.pointerId !== press.id) return;
-      const dx = e.clientX - press.sx;
-      if (!press.moved && Math.abs(dx) > 6) {
-        press.moved = true;
-        shell.classList.add("dragging");
-        shell.classList.remove("jump");
-        hideBubble();
-      }
-      if (press.moved) {
-        setX(e.clientX - press.ox);
-      }
-    });
+  if (!press || e.pointerId !== press.id) return;
+  const dx = e.clientX - press.sx;
+  const dy = e.clientY - press.sy;
+
+  if (!press.moved && Math.hypot(dx, dy) > 6) {
+    press.moved = true;
+    shell.classList.add("dragging");
+    shell.classList.remove("jump");
+    hideBubble();
+  }
+  if (press.moved) {
+    // Теперь учитываем и X, и Y
+    setPos(e.clientX - press.ox, e.clientY - press.oy);
+  }
+});
 
     function endPress(e) {
       if (!press || e.pointerId !== press.id) return;
