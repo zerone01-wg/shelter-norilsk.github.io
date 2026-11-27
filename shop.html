@@ -438,12 +438,17 @@
       let discount = 0;
 
       if (cart.can > 0) {
-        let canPrice = cart.can * prices.can;
-        if (cart.can >= 2) discount = Math.round(canPrice * 0.10);
-        total += canPrice;
-      }
-      if (cart.sample > 0) total += cart.samplePrice;
-      total -= discount;
+  let canPrice = cart.can * prices.can;
+  // Если банок 2 и больше - применяем скидку
+  if (cart.can >= 2) {
+    // Считаем скидку так, чтобы итоговая цена была 5000 за 2 банки
+    // (То есть скидка = (2600 * 2) - 5000 = 200 рублей за каждые 2 банки)
+    discount = Math.floor(cart.can / 2) * 200;
+  }
+  total += canPrice;
+}
+if (cart.sample > 0) total += cart.samplePrice;
+total -= discount;
 
       document.getElementById('cartCount').innerText = totalCount;
       document.getElementById('cartTotal').innerText = total.toLocaleString('ru-RU') + ' ₽';
