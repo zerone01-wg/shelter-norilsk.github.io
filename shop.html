@@ -8,12 +8,12 @@
   <style>
     :root {
       --blue: #1958ff; --black: #0a0a0a; --gray: #707070; --white: #ffffff;
-      --glass-bg: rgba(255, 255, 255, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.8);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.6);
       --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
     
     body { 
       font-family: "Manrope", sans-serif; 
@@ -22,7 +22,7 @@
       min-height: 100vh;
     }
     a { text-decoration: none; color: inherit; }
-    .container { width: min(1240px, calc(100% - 48px)); margin: 0 auto; }
+    .container { width: min(1240px, calc(100% - 32px)); margin: 0 auto; }
 
     /* ---------- LOADER ---------- */
     .loader {
@@ -65,34 +65,49 @@
     .header-inner { display: flex; justify-content: space-between; align-items: center; }
     
     .logo { font-family: "Unbounded", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.08em; }
-    .logo:hover { color: var(--blue); }
     
-    .nav { display: flex; gap: 20px; align-items: center; }
+    .nav { display: flex; gap: 15px; align-items: center; }
     
-    /* Иконка домика */
-    .home-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: background 0.2s, transform 0.2s; }
+    .home-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: background 0.2s, transform 0.2s; }
     .home-icon:hover { background: var(--blue); transform: translateY(-2px); }
-    .home-icon svg { width: 20px; height: 20px; color: var(--white); }
+    .home-icon svg { width: 22px; height: 22px; color: var(--white); }
     
     .cart-btn { 
-      background: var(--blue); color: var(--white); padding: 10px 20px; border-radius: 8px; 
+      background: var(--blue); color: var(--white); padding: 12px 24px; border-radius: 12px; 
       font-weight: 800; display: flex; align-items: center; gap: 10px; cursor: pointer; border: none;
-      transition: transform 0.2s, background 0.2s;
+      transition: transform 0.2s, background 0.2s; font-size: 15px;
     }
     .cart-btn:hover { transform: translateY(-2px); background: #1045d6; }
-    .cart-count { background: var(--white); color: var(--blue); border-radius: 50%; padding: 2px 8px; font-size: 12px; min-width: 22px; text-align: center; }
+    .cart-count { background: var(--white); color: var(--blue); border-radius: 50%; padding: 2px 8px; font-size: 13px; min-width: 24px; text-align: center; }
 
-    /* ---------- PRODUCTS ---------- */
-    .products-grid { 
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-      gap: 30px; padding: 60px 0; max-width: 900px; margin: 0 auto;
+    /* ---------- HORIZONTAL SCROLL GRID ---------- */
+    .scroll-wrapper {
+      padding: 40px 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
     }
+    .scroll-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
     
+    .products-track {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      padding: 0 16px;
+    }
+
+    /* Квадратные карточки */
     .product-card { 
-      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      width: 260px;
+      height: 380px;
+      scroll-snap-align: center;
+      background: var(--glass-bg); 
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
-      border-radius: 24px; padding: 30px; 
-      box-shadow: 0 20px 40px rgba(12, 35, 95, 0.05);
+      border-radius: 24px; 
+      padding: 24px; 
+      box-shadow: 0 15px 35px rgba(12, 35, 95, 0.05);
       text-align: center; 
       transition: transform 0.3s var(--ease), box-shadow 0.3s, background 0.3s;
       display: flex; flex-direction: column; justify-content: space-between;
@@ -100,48 +115,58 @@
       position: relative;
       overflow: hidden;
     }
-    .product-card::before {
-      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-25deg); transition: left 0.6s;
+    
+    .product-card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 25px 50px rgba(12, 35, 95, 0.12); 
+      background: rgba(255, 255, 255, 0.9); 
     }
-    .product-card:hover::before { left: 150%; }
-    .product-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(12, 35, 95, 0.15); background: rgba(255, 255, 255, 0.85); }
     
     .product-img { 
-      width: 180px; height: 180px; margin: 0 auto 20px; 
+      width: 140px; height: 140px; margin: 0 auto 15px; 
       background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,244,255,0.5));
-      border-radius: 30px; display: flex; align-items: center; justify-content: center; 
-      font-size: 60px; box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
+      border-radius: 24px; display: flex; align-items: center; justify-content: center; 
+      font-size: 50px; box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
       border: 1px solid rgba(255,255,255,0.8);
+      overflow: hidden;
+    }
+    .product-img img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
+    
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: center;
     }
     
-    .product-title { font-family: "Unbounded", sans-serif; font-size: 18px; margin-bottom: 10px; }
-    .product-price { font-size: 22px; font-weight: 800; color: var(--blue); margin-bottom: 25px; }
+    .product-title { font-family: "Unbounded", sans-serif; font-size: 16px; margin-bottom: 8px; line-height: 1.2; }
+    .product-price { font-size: 20px; font-weight: 800; color: var(--blue); margin-bottom: 15px; }
     
+    .discount-badge {
+      background: #e6f0ff; color: var(--blue); font-weight: 800; font-size: 11px;
+      padding: 6px 12px; border-radius: 8px; margin-bottom: 15px; display: inline-block;
+    }
+
     .qty-controls { 
-      display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 25px;
-      background: rgba(255,255,255,0.5); border-radius: 12px; padding: 5px; width: fit-content; margin: 0 auto 25px auto;
+      display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;
+      background: rgba(255,255,255,0.6); border-radius: 12px; padding: 4px; width: fit-content; margin: 0 auto 15px auto;
+      border: 1px solid rgba(0,0,0,0.05);
     }
     .qty-btn { 
-      width: 36px; height: 36px; border: none; background: var(--white); 
-      font-size: 20px; cursor: pointer; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      width: 32px; height: 32px; border: none; background: var(--white); 
+      font-size: 18px; cursor: pointer; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       transition: background 0.2s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center;
     }
     .qty-btn:active { transform: scale(0.9); }
-    .qty-input { width: 40px; text-align: center; font-size: 16px; font-weight: 700; border: none; background: transparent; }
+    .qty-input { width: 30px; text-align: center; font-size: 15px; font-weight: 700; border: none; background: transparent; }
     
     .add-to-cart { 
-      width: 100%; padding: 16px; background: var(--blue); color: var(--white); 
-      border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 15px;
+      width: 100%; padding: 14px; background: var(--blue); color: var(--white); 
+      border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 14px;
       transition: background 0.2s, transform 0.2s;
     }
     .add-to-cart:hover { background: #1045d6; transform: translateY(-2px); }
-
-    .discount-badge {
-      background: #e6f0ff; color: var(--blue); font-weight: 800; font-size: 12px;
-      padding: 5px 10px; border-radius: 6px; margin-bottom: 15px; display: inline-block;
-    }
 
     /* ---------- MODAL (Окно товара) ---------- */
     .modal-overlay {
@@ -160,11 +185,12 @@
     .modal-overlay.active .modal-content { transform: translateY(0); }
     
     .modal-close {
-      position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.1); border: none;
-      width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 20px;
+      position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.05); border: none;
+      width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 24px;
       display: flex; align-items: center; justify-content: center; z-index: 10;
+      transition: background 0.2s;
     }
-    .modal-close:hover { background: rgba(0,0,0,0.2); }
+    .modal-close:hover { background: rgba(0,0,0,0.1); }
     
     .modal-body { display: flex; flex-direction: column; }
     @media(min-width: 768px) {
@@ -174,9 +200,9 @@
     }
     
     .modal-img { max-width: 100%; height: auto; border-radius: 12px; }
-    .modal-info h2 { font-family: "Unbounded", sans-serif; font-size: 28px; margin-bottom: 10px; }
+    .modal-info h2 { font-family: "Unbounded", sans-serif; font-size: 26px; margin-bottom: 10px; line-height: 1.2; }
     .modal-info .price { font-size: 24px; font-weight: 800; color: var(--blue); margin-bottom: 20px; }
-    .modal-info p { color: var(--gray); line-height: 1.6; margin-bottom: 20px; font-size: 15px; }
+    .modal-info p { color: var(--gray); line-height: 1.6; margin-bottom: 25px; font-size: 15px; }
 
     /* ---------- CART ---------- */
     .cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; justify-content: flex-end; z-index: 100; opacity: 0; transition: opacity 0.3s; }
@@ -191,19 +217,19 @@
     .cart-modal.active .cart-content { transform: translateX(0); }
     
     .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .close-cart { background: none; border: none; font-size: 30px; cursor: pointer; color: var(--gray); }
+    .close-cart { background: none; border: none; font-size: 32px; cursor: pointer; color: var(--gray); }
     
     .cart-items { flex-grow: 1; overflow-y: auto; }
     .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; font-size: 15px; }
-    .remove-item { background: none; border: none; color: #ff4d4d; font-size: 18px; cursor: pointer; margin-left: 10px; }
+    .remove-item { background: none; border: none; color: #ff4d4d; font-size: 20px; cursor: pointer; margin-left: 10px; }
     
     .cart-total { font-size: 22px; font-weight: 800; margin: 20px 0; display: flex; justify-content: space-between; border-top: 2px solid #eee; padding-top: 20px; }
     .discount-row { font-size: 14px; color: var(--blue); font-weight: 700; margin-bottom: 5px; display: flex; justify-content: space-between; }
-    .checkout-btn { background: var(--black); color: var(--white); padding: 18px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; transition: background 0.2s; }
+    .checkout-btn { background: var(--black); color: var(--white); padding: 18px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; transition: background 0.2s; font-size: 16px; }
     .checkout-btn:hover { background: #333; }
 
     /* ---------- CHECKOUT ---------- */
-    .checkout-section { display: none; padding: 60px 0; max-width: 600px; margin: 0 auto; }
+    .checkout-section { display: none; padding: 40px 0; max-width: 600px; margin: 0 auto; }
     .checkout-section.active { display: block; }
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 14px; }
@@ -242,43 +268,60 @@
     </div>
   </header>
 
-  <main class="container">
-    <!-- СЕТКА ТОВАРОВ -->
-    <div class="products-grid" id="productsView">
-      
-      <!-- Карточка 1 (Банка) -->
-      <div class="product-card" onclick="openModal('can')">
-        <div class="product-img">🍫</div>
-        <h3 class="product-title">Протеин SHELTER</h3>
-        <div class="product-price">2 600 ₽</div>
-        <div class="discount-badge">-10% при покупке от 2 шт.</div>
-        <div class="qty-controls" onclick="event.stopPropagation();">
-          <button class="qty-btn" onclick="changeQty('can', -1)">-</button>
-          <input type="text" class="qty-input" id="qty-can" value="1" readonly>
-          <button class="qty-btn" onclick="changeQty('can', 1)">+</button>
+  <main>
+    <!-- ГОРИЗОНТАЛЬНАЯ ЛЕНТА ТОВАРОВ -->
+    <div class="scroll-wrapper" id="productsView">
+      <div class="products-track">
+        
+        <!-- Карточка 1 (Банка) -->
+        <div class="product-card" onclick="openModal('can')">
+          <div class="product-img">🍫</div>
+          <div class="product-info">
+            <h3 class="product-title">Протеин SHELTER</h3>
+            <div class="product-price">2 600 ₽</div>
+            <div class="discount-badge">-10% от 2 шт.</div>
+          </div>
+          <div class="qty-controls" onclick="event.stopPropagation();">
+            <button class="qty-btn" onclick="changeQty('can', -1)">-</button>
+            <input type="text" class="qty-input" id="qty-can" value="1" readonly>
+            <button class="qty-btn" onclick="changeQty('can', 1)">+</button>
+          </div>
+          <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('can')">В корзину</button>
         </div>
-        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('can')">В корзину</button>
-      </div>
 
-      <!-- Карточка 2 (Пробник) -->
-      <div class="product-card" onclick="openModal('sample')">
-        <div class="product-img">🥤</div>
-        <h3 class="product-title">Пробник</h3>
-        <div class="product-price">от 100 ₽</div>
-        <div class="qty-controls" style="flex-direction: column; padding: 10px;" onclick="event.stopPropagation();">
-          <select id="sample-type" class="qty-input" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px;">
-            <option value="1">1 шт — 100 ₽</option>
-            <option value="5">5 шт — 450 ₽</option>
-            <option value="10">10 шт — 900 ₽</option>
-          </select>
+        <!-- Карточка 2 (Пробник) -->
+        <div class="product-card" onclick="openModal('sample')">
+          <div class="product-img">🥤</div>
+          <div class="product-info">
+            <h3 class="product-title">Пробник</h3>
+            <div class="product-price">от 100 ₽</div>
+          </div>
+          <div class="qty-controls" style="flex-direction: column; padding: 5px;" onclick="event.stopPropagation();">
+            <select id="sample-type" class="qty-input" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px;">
+              <option value="1">1 шт — 100 ₽</option>
+              <option value="5">5 шт — 450 ₽</option>
+              <option value="10">10 шт — 900 ₽</option>
+            </select>
+          </div>
+          <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('sample')">В корзину</button>
         </div>
-        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('sample')">В корзину</button>
-      </div>
 
+        <!-- Карточка 3 (Скоро) -->
+        <div class="product-card" style="opacity: 0.6; cursor: default;">
+          <div class="product-img">🥛</div>
+          <div class="product-info">
+            <h3 class="product-title">Ваниль</h3>
+            <div class="product-price">Скоро</div>
+            <div class="discount-badge">В разработке</div>
+          </div>
+          <div style="height: 80px; display: flex; align-items: center; justify-content: center; color: var(--gray); font-weight: 700;">Следите за новостями</div>
+        </div>
+
+      </div>
     </div>
 
     <!-- ФОРМА ОФОРМЛЕНИЯ -->
-    <div class="checkout-section" id="checkoutView">
+    <div class="checkout-section container" id="checkoutView">
       <h2 style="font-family: 'Unbounded'; margin-bottom: 30px; text-align: center;">Оформление заказа</h2>
       <form id="orderForm">
         <div class="form-group">
@@ -314,7 +357,7 @@
           <h2 id="modalTitle">Название</h2>
           <div class="price" id="modalPrice">0 ₽</div>
           <p id="modalDesc">Описание...</p>
-          <button class="add-to-cart" onclick="addToCart('can'); closeModal(event)" id="modalBtn">Добавить в корзину</button>
+          <button class="add-to-cart" id="modalBtn">Добавить в корзину</button>
         </div>
       </div>
     </div>
@@ -354,10 +397,9 @@
     let cart = JSON.parse(localStorage.getItem('shelterCart')) || { can: 0, sample: 0, samplePrice: 0 };
     const MAX_SAMPLES = 10;
 
-    // Данные для модальных окон
     const productData = {
       can: {
-        title: "Протеин SHELTER Deep Chocolate",
+        title: "Протеин SHELTER",
         price: "2 600 ₽",
         desc: "Чистый сывороточный протеин с глубоким шоколадным вкусом. Без сахара. 18 г белка на порцию. Идеально для восстановления после тренировок.",
         img: "images/shelter-protein-chocolate.jpg"
@@ -371,21 +413,16 @@
     };
 
     function openModal(type) {
+      if (!productData[type]) return;
       const data = productData[type];
       document.getElementById('modalTitle').innerText = data.title;
       document.getElementById('modalPrice').innerText = data.price;
       document.getElementById('modalDesc').innerText = data.desc;
       document.getElementById('modalImg').src = data.img;
       
-      // Меняем кнопку для пробников (чтобы она не добавляла банку)
       const btn = document.getElementById('modalBtn');
-      if (type === 'can') {
-        btn.innerText = "Добавить банку в корзину";
-        btn.onclick = (e) => { addToCart('can'); closeModal(e); };
-      } else {
-        btn.innerText = "Добавить пробники в корзину";
-        btn.onclick = (e) => { addToCart('sample'); closeModal(e); };
-      }
+      btn.innerText = "Добавить в корзину";
+      btn.onclick = (e) => { addToCart(type); closeModal(e); };
 
       document.getElementById('productModal').classList.add('active');
     }
@@ -494,7 +531,6 @@
       window.scrollTo(0, 0);
     };
 
-    // Валидация формы
     document.getElementById('orderForm').onsubmit = (e) => {
       e.preventDefault();
       const inputs = e.target.querySelectorAll('input');
