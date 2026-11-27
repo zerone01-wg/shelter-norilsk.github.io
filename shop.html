@@ -86,9 +86,9 @@
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none; /* Firefox */
+      scrollbar-width: none;
     }
-    .scroll-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+    .scroll-wrapper::-webkit-scrollbar { display: none; }
     
     .products-track {
       display: flex;
@@ -254,7 +254,6 @@
     <div class="container header-inner">
       <a href="index.html" class="logo">SHELTER</a>
       <div class="nav">
-        <!-- Иконка домика -->
         <a href="index.html" class="home-icon" title="На главную">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -279,7 +278,7 @@
           <div class="product-info">
             <h3 class="product-title">Протеин SHELTER</h3>
             <div class="product-price">2 600 ₽</div>
-            <div class="discount-badge">-10% от 2 шт.</div>
+            <div class="discount-badge">2 шт. за 5000 ₽</div>
           </div>
           <div class="qty-controls" onclick="event.stopPropagation();">
             <button class="qty-btn" onclick="changeQty('can', -1)">-</button>
@@ -323,24 +322,30 @@
     <!-- ФОРМА ОФОРМЛЕНИЯ -->
     <div class="checkout-section container" id="checkoutView">
       <h2 style="font-family: 'Unbounded'; margin-bottom: 30px; text-align: center;">Оформление заказа</h2>
-      <form id="orderForm">
+      
+      <!-- ВАЖНО: Замени ТВОЙ_КОД_ИЗ_FORMSPREE на реальный код из твоего кабинета Formspree -->
+      <form id="orderForm" action="https://formspree.io/f/xeagwoqo" method="POST">
+        
+        <input type="hidden" name="Заказ" id="hiddenOrder" value="">
+        <input type="hidden" name="Итоговая сумма" id="hiddenTotal" value="">
+        
         <div class="form-group">
           <label>ФИО</label>
-          <input type="text" name="name" required placeholder="Иванов Иван Иванович">
+          <input type="text" name="name" id="input-name" required placeholder="Иванов Иван Иванович">
         </div>
         <div class="form-group">
           <label>Номер телефона</label>
-          <input type="tel" name="phone" required placeholder="+7 (999) 999-99-99">
+          <input type="tel" name="phone" id="input-phone" required placeholder="+7 (999) 999-99-99">
         </div>
         <div class="form-group">
           <label>Email</label>
-          <input type="email" name="email" required placeholder="mail@example.com">
+          <input type="email" name="email" id="input-email" required placeholder="mail@example.com">
         </div>
         <div class="form-group">
           <label>Адрес проживания</label>
-          <input type="text" name="address" required placeholder="Город, улица, дом, квартира">
+          <input type="text" name="address" id="input-address" required placeholder="Город, улица, дом, квартира">
         </div>
-        <button type="submit" class="submit-order">Перейти к оплате</button>
+        <button type="submit" class="submit-order">Оформить заказ</button>
       </form>
     </div>
   </main>
@@ -373,7 +378,7 @@
       <div class="cart-items" id="cartItems"></div>
       
       <div id="discountInfo" style="display: none;" class="discount-row">
-        <span>Скидка 10% на протеин:</span>
+        <span>Скидка за объем:</span>
         <span id="discountAmount">0 ₽</span>
       </div>
       
@@ -438,17 +443,15 @@
       let discount = 0;
 
       if (cart.can > 0) {
-  let canPrice = cart.can * prices.can;
-  // Если банок 2 и больше - применяем скидку
-  if (cart.can >= 2) {
-    // Считаем скидку так, чтобы итоговая цена была 5000 за 2 банки
-    // (То есть скидка = (2600 * 2) - 5000 = 200 рублей за каждые 2 банки)
-    discount = Math.floor(cart.can / 2) * 200;
-  }
-  total += canPrice;
-}
-if (cart.sample > 0) total += cart.samplePrice;
-total -= discount;
+        let canPrice = cart.can * prices.can;
+        // Скидка: каждые 2 банки дают скидку 200 рублей
+        if (cart.can >= 2) {
+          discount = Math.floor(cart.can / 2) * 200;
+        }
+        total += canPrice;
+      }
+      if (cart.sample > 0) total += cart.samplePrice;
+      total -= discount;
 
       document.getElementById('cartCount').innerText = totalCount;
       document.getElementById('cartTotal').innerText = total.toLocaleString('ru-RU') + ' ₽';
@@ -536,9 +539,9 @@ total -= discount;
       window.scrollTo(0, 0);
     };
 
+    // ---------- ОТПРАВКА ФОРМЫ В FORMSPREE ----------
     document.getElementById('orderForm').onsubmit = (e) => {
-      e.preventDefault();
-      const inputs = e.target.querySelectorAll('input');
+      const inputs = e.target.querySelectorAll('input:not([type="hidden"])');
       let isValid = true;
 
       inputs.forEach(input => {
@@ -550,23 +553,22 @@ total -= discount;
         }
       });
 
-      if (!isValid) return;
+      if (!isValid) {
+        e.preventDefault();
+        return; 
+      }
 
-      const formData = new FormData(e.target);
-      const orderDetails = `
-        Клиент: ${formData.get('name')}
-        Телефон: ${formData.get('phone')}
-        Email: ${formData.get('email')}
-        Адрес: ${formData.get('address')}
-        ---
-        Заказ: Протеин - ${cart.can} шт., Пробники - ${cart.sample} шт.
-        Итого к оплате: ${document.getElementById('cartTotal').innerText}
-      `;
+      // Заполняем скрытые поля данными о корзине
+      let orderText = "";
+      if (cart.can > 0) orderText += `Протеин SHELTER: ${cart.can} шт. `;
+      if (cart.sample > 0) orderText += `Пробники: ${cart.sample} шт.`;
       
-      alert('Данные собраны! Здесь будет интеграция с оплатой.\n\n' + orderDetails);
+      document.getElementById('hiddenOrder').value = orderText || "Корзина пуста (ошибка)";
+      document.getElementById('hiddenTotal').value = document.getElementById('cartTotal').innerText;
+
+      // Очищаем корзину после отправки
       cart = { can: 0, sample: 0, samplePrice: 0 };
-      updateCartUI();
-      window.location.href = "index.html";
+      localStorage.setItem('shelterCart', JSON.stringify(cart));
     };
 
     document.querySelectorAll('#orderForm input').forEach(input => {
